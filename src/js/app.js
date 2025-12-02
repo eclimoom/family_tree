@@ -2,9 +2,11 @@ import cytoscape from "cytoscape";
 import data from "../mock/data.json";
 import dagre from "cytoscape-dagre";
 import $ from "jquery";
-import male from '../assets/male.png';
-import female from '../assets/female.png';
 cytoscape.use(dagre);
+
+// 使用 new URL() 方式导入图片（Parcel 2 推荐方式）
+const male = new URL('../assets/male.png', import.meta.url).href;
+const female = new URL('../assets/female.png', import.meta.url).href;
 
 const styles = [
   {
@@ -76,7 +78,7 @@ let layout = {
     cy.center();
     let node = cy.$(":selected");
     if(node){
-      let data = node.data();
+      let data = node.data();      
       handleSelected(data);
     }else {
       console.log("no select user!");
@@ -131,16 +133,28 @@ function handleSelected(data) {
   
 }
 function setUserInfo(data) {
-  let { name, gender, birthDate, isLiving, deathDate, birthAddress, livingAddress, families, portraitUrl } = data;
+  let { name, gender, birthDate, isLiving, deathDate, birthAddress, livingAddress, families } = data;
   $fname.val(name);
   $name.text(name);
   $lifespa.text(isLiving ? "在世": "过世");
   let _g = ["男", "女"].includes(gender) ? gender : "未知";
-  $gender.filter(`[value=${_g}]`).prop("checked", true);
+  // 先取消所有选中，再选中对应的性别
+  // 对于 Bootstrap 按钮组，需要移除所有 active 类，然后设置 checked 并触发 change 事件
+  $gender.closest('.btn-group').find('.btn').removeClass('active');
+  $gender.prop("checked", false);
+  const $selectedGender = $gender.filter(`[value="${_g}"]`);
+  $selectedGender.prop("checked", true);
+  // 触发 change 事件，让 Bootstrap 更新按钮样式
+  $selectedGender.trigger('change');
+  // 手动添加 active 类以确保按钮显示为选中状态
+  $selectedGender.closest('label.btn').addClass('active');
   $birthdate.val(birthDate);
   $birthAddress.val(birthAddress);
   $livingAddress.val(livingAddress);
-  let _portraitUrl = portraitUrl || (_g == "女" ? female : male);
+  // 根据性别使用默认头像
+  let _portraitUrl = _g == "女" ? female : male;
+  console.log(_portraitUrl, 'portraitUrl', _g);
+  
   $avatar.attr("src", _portraitUrl);
 }
 
@@ -164,4 +178,12 @@ $('body').on('click', '.add-relation-btn', function(){
     }else {
       console.log("no select user!");
     }
-})
+});
+
+// 处理性别按钮点击，确保选中状态正确切换
+$gender.on('change', function() {
+  // 移除所有按钮的 active 类
+  $gender.closest('.btn-group').find('.btn').removeClass('active');
+  // 为选中的按钮添加 active 类
+  $(this).closest('label.btn').addClass('active');
+});
