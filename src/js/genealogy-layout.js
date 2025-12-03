@@ -6,12 +6,12 @@
  */
 
 // 布局默认配置常量
-const DEFAULT_NODE_WIDTH = 180;
+const DEFAULT_NODE_WIDTH = 160;
 const DEFAULT_LAYOUT_CONFIG = {
-  nodeSep: 200,      // 同层节点间距
-  rankSep: 240,      // 层级间距
-  coupleGap: 160,    // 夫妻之间的水平间距
-  padding: 80,       // 布局内边距
+  nodeSep: 50,      // 同层节点间距
+  rankSep: 200,      // 层级间距
+  coupleGap: 20,    // 夫妻之间的水平间距
+  padding: 40,       // 布局内边距
 };
 
 /**
