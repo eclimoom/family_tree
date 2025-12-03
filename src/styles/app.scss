@@ -166,6 +166,42 @@ $profileHeight: 192px;
 .tree-wrap {
   border: 1px solid #f00;
   max-width: 100%;
+  position: relative;
+}
+
+.generation-labels {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  pointer-events: none;
+  
+  .generation-label {
+    position: absolute;
+    left: 10px;
+    transform: translateY(-50%);
+    background-color: rgba(36, 32, 72, 0.8);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    
+    &::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 8px solid rgba(36, 32, 72, 0.8);
+    }
+  }
 }
 
 .icon {

@@ -17,10 +17,10 @@ const NODE_CONFIG = {
 };
 
 const LAYOUT_CONFIG = {
-  nodeSep: 50,      // 同一层级节点间距
-  rankSep: 150,      // 辈分间距
-  coupleGap: 120,    // 夫妻左右间距
-  padding: 80,       // 布局内边距
+  nodeSep: 40,      // 同一层级节点间距
+  rankSep: 130,      // 辈分间距
+  coupleGap: 110,    // 夫妻左右间距
+  padding: 40,       // 布局内边距
   initialZoom: 0.9,  // 初始缩放比例
 };
 
@@ -151,6 +151,8 @@ let layout = createGenealogyLayout(transformedData, {
         handleSelected(data);
       }
     }
+    // 渲染代系数标签
+    renderGenerationLabels(cy);
   },
 });
 
@@ -267,3 +269,227 @@ $gender.on('change', function() {
   // 为选中的按钮添加 active 类
   $(this).closest('label.btn').addClass('active');
 });
+
+/**
+ * 渲染代系数标签
+ * 在画布左侧显示代系数，与族谱布局的代系线对齐
+ */
+function renderGenerationLabels(cy) {
+  const $labelsContainer = $('#generation-labels');
+  $labelsContainer.empty();
+
+  // 收集所有代系及其节点引用
+  // 使用实际显示的节点（非复合节点）来获取Y坐标，这样能准确对齐
+  const generationMap = new Map();
+  
+  // 遍历所有实际显示的节点（非复合节点），获取代系信息
+  cy.nodes(':not(:parent)').forEach((node) => {
+    const generation = node.data('generation');
+    if (generation !== undefined && generation !== null) {
+      // 存储节点引用，以便后续获取实时渲染位置
+      if (!generationMap.has(generation)) {
+        generationMap.set(generation, [node]);
+      } else {
+        generationMap.get(generation).push(node);
+      }
+    }
+  });
+
+  // 按代系排序
+  const sortedGenerations = Array.from(generationMap.entries()).sort((a, b) => a[0] - b[0]);
+
+  // 创建代系数标签，存储节点引用以便实时更新位置
+  sortedGenerations.forEach(([generation, nodes]) => {
+    const $label = $('<div>')
+      .addClass('generation-label')
+      .text(`${generation}`)
+      .data('generation', generation)
+      .data('referenceNodes', nodes); // 存储节点引用
+    
+    $labelsContainer.append($label);
+  });
+
+  // 更新标签位置
+  updateGenerationLabelsPosition(cy);
+}
+
+/**
+ * 更新代系数标签的位置
+ * 使用实际节点的渲染位置来对齐标签
+ */
+function updateGenerationLabelsPosition(cy) {
+  const $labels = $('#generation-labels .generation-label');
+  const container = cy.container();
+  const containerRect = container.getBoundingClientRect();
+  
+  $labels.each(function() {
+    const $label = $(this);
+    const referenceNodes = $label.data('referenceNodes');
+    
+    if (referenceNodes && referenceNodes.length > 0) {
+      // 计算该代系所有节点的平均渲染Y坐标
+      let totalY = 0;
+      let count = 0;
+      
+      referenceNodes.forEach((node) => {
+        if (node && node.length > 0) {
+          const renderedPos = node.renderedPosition();
+          if (renderedPos && renderedPos.y !== undefined) {
+            totalY += renderedPos.y;
+            count++;
+          }
+        }
+      });
+      
+      if (count > 0) {
+        // renderedPosition 返回的坐标已经包含容器偏移，直接使用即可
+        const averageY = totalY / count;
+        const screenY = averageY;
+        $label.css('top', `${screenY}px`);
+      }
+    }
+  });
+}
+
+// 监听画布的缩放和平移事件，更新代系数标签位置
+cy.on('pan zoom', function() {
+  updateGenerationLabelsPosition(cy);
+});
+
+// 监听窗口大小变化
+$(window).on('resize', function() {
+  updateGenerationLabelsPosition(cy);
+});
+
+// 处理复合节点的拖拽：子节点可以被选中，但拖拽时移动整个复合节点
+let draggedParentNode = null;
+let dragStartParentPos = null;
+let dragStartChildPos = null;
+
+cy.on('grab', 'node', function(evt) {
+  const node = evt.target;
+  
+  // 如果是子节点（有父节点），记录父节点和初始位置
+  if (node.isChild()) {
+    const parentNode = node.parent();
+    if (parentNode && parentNode.length > 0) {
+      draggedParentNode = parentNode;
+      dragStartParentPos = { ...parentNode.position() };
+      dragStartChildPos = { ...node.position() };
+    }
+  }
+});
+
+cy.on('drag', 'node', function(evt) {
+  const node = evt.target;
+  
+  // 如果拖拽的是子节点，阻止子节点移动，改为移动父节点
+  if (node.isChild() && draggedParentNode) {
+    const parentNode = node.parent();
+    if (parentNode && parentNode.id() === draggedParentNode.id()) {
+      // 获取子节点当前的位置（已经被拖拽移动了）
+      const currentChildPos = node.position();
+      
+      // 计算子节点的移动偏移量
+      const deltaX = currentChildPos.x - dragStartChildPos.x;
+      const deltaY = currentChildPos.y - dragStartChildPos.y;
+      
+      // 将子节点位置重置回初始位置
+      node.position(dragStartChildPos);
+      
+      // 移动父节点
+      const newParentPos = {
+        x: dragStartParentPos.x + deltaX,
+        y: dragStartParentPos.y + deltaY
+      };
+      parentNode.position(newParentPos);
+      
+      // 更新所有子节点的位置，保持相对位置
+      const children = parentNode.children();
+      const sorted = children.toArray().sort((a, b) => {
+        const genderA = a.data('gender') || '';
+        const genderB = b.data('gender') || '';
+        const genderScore = genderWeight(genderA) - genderWeight(genderB);
+        if (genderScore !== 0) return genderScore;
+        return (a.data('id') || '').localeCompare(b.data('id') || '');
+      });
+      
+      if (sorted.length === 1) {
+        sorted[0].position(newParentPos);
+      } else {
+        const gap = LAYOUT_CONFIG.coupleGap;
+        const startX = newParentPos.x - ((sorted.length - 1) * gap) / 2;
+        sorted.forEach((child, idx) => {
+          child.position({
+            x: startX + idx * gap,
+            y: newParentPos.y,
+          });
+        });
+      }
+      
+      // 更新拖拽起始位置，以便下次拖拽时使用
+      dragStartParentPos = { ...newParentPos };
+      dragStartChildPos = { ...node.position() };
+    }
+  }
+});
+
+cy.on('free', 'node', function(evt) {
+  const node = evt.target;
+  
+  // 拖拽结束后，清理状态并重新对齐
+  if (draggedParentNode && node.isChild()) {
+    const parentNode = node.parent();
+    if (parentNode && parentNode.id() === draggedParentNode.id()) {
+      // 重新对齐复合节点内部位置
+      arrangeCompoundNodePositions(cy, LAYOUT_CONFIG.coupleGap);
+    }
+  }
+  
+  draggedParentNode = null;
+  dragStartParentPos = null;
+  dragStartChildPos = null;
+});
+
+// 需要导入 arrangeCompoundNodePositions 函数，或者在这里重新实现
+// 由于 arrangeCompoundNodePositions 在 genealogy-layout.js 中，我们需要在这里实现一个简化版本
+function arrangeCompoundNodePositions(cy, coupleGap) {
+  cy.nodes(":parent").forEach((parentNode) => {
+    const children = parentNode.children();
+    const pos = parentNode.position();
+
+    if (children.length === 0) return;
+    const sorted = children.toArray().sort((a, b) => {
+      const genderA = a.data('gender') || '';
+      const genderB = b.data('gender') || '';
+      const genderScore = genderWeight(genderA) - genderWeight(genderB);
+      if (genderScore !== 0) return genderScore;
+      return (a.data('id') || '').localeCompare(b.data('id') || '');
+    });
+
+    if (sorted.length === 1) {
+      sorted[0].position({ x: pos.x, y: pos.y });
+      parentNode.position(pos);
+      return;
+    }
+
+    const gap = coupleGap || 120;
+    const startX = pos.x - ((sorted.length - 1) * gap) / 2;
+
+    sorted.forEach((child, idx) => {
+      child.position({
+        x: startX + idx * gap,
+        y: pos.y,
+      });
+    });
+
+    parentNode.position(pos);
+  });
+}
+
+function genderWeight(gender) {
+  if (!gender) return 2;
+  if (gender === "男" || gender === "male" || gender === "M") return 0;
+  if (gender === "女" || gender === "female" || gender === "F") return 1;
+  return 2;
+}
