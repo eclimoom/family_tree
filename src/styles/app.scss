@@ -1,4 +1,5 @@
 $navbarHeight: 64px;
+
 .navbar {
   padding: 0;
   background: none rgb(243, 240, 236);
@@ -7,17 +8,21 @@ $navbarHeight: 64px;
   .navbar-brand {
     text-transform: capitalize;
   }
+
   .navbar-nav {
     justify-content: stretch;
     align-items: stretch;
     height: $navbarHeight;
+
     .nav-item {
       line-height: $navbarHeight;
+
       .active,
       &.active .nav-link,
       &:hover {
         color: rgb(230, 113, 110);
       }
+
       &.active .nav-link {
         background: rgb(36, 32, 72);
       }
@@ -29,12 +34,15 @@ $navbarHeight: 64px;
   margin-top: $navbarHeight;
   height: calc(100vh - $navbarHeight);
 }
+
 $profileHeight: 192px;
+
 .left-pane {
   width: 376px;
   background: #fff;
   box-shadow: rgb(45 43 36 / 20%) 0px 0px 20px 0px;
   z-index: 5;
+
   // profile start
   .profile {
     background-color: rgb(36, 32, 72);
@@ -43,6 +51,7 @@ $profileHeight: 192px;
     position: relative;
     text-align: center;
     height: $profileHeight;
+
     .btn-close {
       position: absolute;
       right: 1rem;
@@ -53,15 +62,18 @@ $profileHeight: 192px;
       border-radius: 2rem;
       padding: 0;
       opacity: 0.8;
-      &:focus{
+
+      &:focus {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
       }
     }
+
     .avatar-wrap {
       display: block;
       margin: 0px 0px 0.25rem;
       padding: 0px;
       border-radius: 4px;
+
       img {
         backface-visibility: hidden;
         display: inline-block;
@@ -74,32 +86,40 @@ $profileHeight: 192px;
         background: rgb(255, 255, 255);
       }
     }
+
     .name {
       font-size: 1.75rem;
     }
+
     .lifespa {
       font-size: 1.125rem;
       margin-bottom: 0;
     }
   }
+
   // profile end
 
   // 2. 功能 start
   .user-tools {
     text-align: center;
     padding: 2rem 1rem 1rem;
+
     .btn {
       border: none;
       box-shadow: none;
+
       .icon {
         margin-bottom: 8px;
       }
+
       font-size: 13px;
     }
   }
+
   .add-relation {
     padding: 2rem 1rem 1rem;
   }
+
   // 2. 功能 end
 
   // 3.profile-editor start
@@ -107,37 +127,45 @@ $profileHeight: 192px;
   .view-profile {
     border-bottom: 1px solid rgb(220, 215, 210);
     padding-bottom: 16px;
+
     .btn-view-profile {
       width: 80%;
       display: block;
       border: 1px solid #242048;
     }
   }
+
   .user-wrap {
     height: calc(100vh - $profileHeight - $navbarHeight - 20px);
     overflow: auto;
   }
 
-  .add-show{
-   display: none; 
+  .add-show {
+    display: none;
   }
-  .add-relation{
-    .add-show{
-    display: block; 
+
+  .add-relation {
+    .add-show {
+      display: block;
     }
-    .add-hide{
+
+    .add-hide {
       display: none;
     }
   }
-  .relation-group{
-    .btn{
+
+  .relation-group {
+    .btn {
       padding: .375rem .5rem;
     }
   }
+
   // 3.profile-editor end
 }
+
 .tree-wrap {
   border: 1px solid #f00;
+  max-width: 100%;
 }
 
 .icon {
@@ -145,12 +173,15 @@ $profileHeight: 192px;
   height: 40px;
   color: #242048;
   border: 1px solid #242048;
+
   &-circle {
     border-radius: 20px;
   }
+
   &-add {
     background: url(../assets/icons/add.svg) center no-repeat;
   }
+
   &-tree {
     background: url(../assets/icons/tree.svg) center no-repeat;
   }
