@@ -73,9 +73,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
 
     // 转换数据以支持族谱布局（夫妻分组）
     const transformedData = transformToGenealogyLayout(data as any);
-    console.log("转换后的节点数:", transformedData.nodes.length);
-    console.log("转换后的边数:", transformedData.edges.length);
-
+    
     // 创建族谱布局配置（按辈分分层 + 复合节点）
     const layout = createGenealogyLayout(transformedData, {
       nodeSep: LAYOUT_CONFIG.nodeSep,
@@ -501,34 +499,33 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   private updateGenerationLabelsPosition(cy: Core) {
     const labels = document.querySelectorAll('#generation-labels .generation-label');
-    const container = cy.container();
-    if (!container) return;
-    
-    const containerRect = container.getBoundingClientRect();
+    const cyContainer = cy.container();
+    if (!cyContainer) return;
     
     labels.forEach((label) => {
       const referenceNodes = (label as any).referenceNodes;
       
       if (referenceNodes && referenceNodes.length > 0) {
-        // 计算该代系所有节点的平均渲染Y坐标
+        // 计算该代系所有节点的平均渲染Y坐标（相对于 Cytoscape 容器的渲染坐标）
         let totalY = 0;
         let count = 0;
         
         referenceNodes.forEach((node: any) => {
           if (node && node.length > 0) {
-            const renderedPos = node.renderedPosition();
-            if (renderedPos && renderedPos.y !== undefined) {
-              totalY += renderedPos.y;
+            const bbox = node.renderedBoundingBox();
+            if (bbox && bbox.y1 !== undefined && bbox.y2 !== undefined) {
+              // renderedBoundingBox 已经是相对于 Cytoscape 画布的渲染坐标
+              const centerY = (bbox.y1 + bbox.y2) / 2;
+              totalY += centerY;
               count++;
             }
           }
         });
         
         if (count > 0) {
-          // renderedPosition 返回的是视口坐标，需要转换为容器内坐标
           const averageY = totalY / count;
-          const localY = averageY - containerRect.top;
-          (label as HTMLElement).style.top = `${localY}px`;
+          // generation-labels 绝对定位于 #cy 容器内，直接使用渲染坐标
+          (label as HTMLElement).style.top = `${averageY}px`;
         }
       }
     });
