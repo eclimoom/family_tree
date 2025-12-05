@@ -21,5 +21,8 @@ $navbar-light-hover-color: rgb(230, 113, 110);
 $font-size-base: 12px;
 
 /* Bootstrap 样式导入 */
+// 注意：Bootstrap 5.3.8 内部仍使用 @import，会产生弃用警告
+// 这些警告来自 Bootstrap 库本身，不影响功能
+// 等待 Bootstrap 更新到完全支持 @use 的版本
 @import 'bootstrap/scss/bootstrap';
 
