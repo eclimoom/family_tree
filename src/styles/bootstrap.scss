@@ -1,3 +1,25 @@
+// Bootstrap SCSS 变量（推荐方式，在导入前定义）
+
+// 导航栏变量
+$enable-gradients: true;
+$enable-shadows: true;
+
+$offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+
+// Customize some defaults
+$body-color: #333;
+$body-bg: #eeebe4;
+$border-radius: 0.4rem;
+$success: #7952b3;
+$primary: rgb(36, 32, 72);
+
+// customize navbar
+$navbar-padding-y: 0;
+$nav-link-padding-y: 0;
+$navbar-nav-link-padding-x: 2rem;
+$navbar-light-hover-color: rgb(230, 113, 110);
+$font-size-base: 12px;
+
 /* Bootstrap 样式导入 */
 @import 'bootstrap/scss/bootstrap';
 
