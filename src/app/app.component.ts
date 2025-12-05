@@ -4,8 +4,6 @@ import cytoscape, { Core, NodeSingular, EventObject } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import { transformToGenealogyLayout, createGenealogyLayout, arrangeCompoundNodePositions } from './genealogy-layout';
 import data from '../mock/data.json';
-import maleImg from '../assets/male.png';
-import femaleImg from '../assets/female.png';
 
 // 注册 dagre 布局
 cytoscape.use(dagre);
@@ -433,7 +431,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     if (livingAddressInput) livingAddressInput.value = livingAddress;
     
     // 根据性别使用默认头像
-    const _portraitUrl = _g === "女" ? femaleImg : maleImg;
+    const _portraitUrl = _g === "女" ? 'assets/female.png' : 'assets/male.png';
     
     if (avatarImg) {
       avatarImg.src = _portraitUrl;
