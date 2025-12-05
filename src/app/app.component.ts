@@ -525,10 +525,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         
         if (count > 0) {
-          // renderedPosition 返回的坐标已经包含容器偏移，直接使用即可
+          // renderedPosition 返回的是视口坐标，需要转换为容器内坐标
           const averageY = totalY / count;
-          const screenY = averageY;
-          (label as HTMLElement).style.top = `${screenY}px`;
+          const localY = averageY - containerRect.top;
+          (label as HTMLElement).style.top = `${localY}px`;
         }
       }
     });
