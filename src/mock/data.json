@@ -1,0 +1,517 @@
+{
+  "nodes": [
+    {
+      "data": {
+        "id": "gen1_1",
+        "name": "张曾祖父1",
+        "birthDate": "1920-01-01",
+        "deathDate": "1995-05-15",
+        "birthAddress": "北京市",
+        "livingAddress": "",
+        "gender": "男",
+        "isLiving": false,
+        "portraitUrl": "./assets/male.png",
+        "spouse": "gen1_2",
+        "coupleId": "couple_gen1"
+      }
+    },
+    {
+      "data": {
+        "id": "gen1_2",
+        "name": "张曾祖母1",
+        "birthDate": "1922-03-10",
+        "deathDate": "1998-08-20",
+        "birthAddress": "北京市",
+        "livingAddress": "",
+        "gender": "女",
+        "isLiving": false,
+        "portraitUrl": "./assets/female.png",
+        "spouse": "gen1_1",
+        "coupleId": "couple_gen1"
+      }
+    },
+    {
+      "data": {
+        "id": "gen2_1",
+        "name": "张祖父2",
+        "birthDate": "1945-06-15",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市朝阳区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png",
+        "spouse": "gen2_2",
+        "coupleId": "couple_gen2_1"
+      }
+    },
+    {
+      "data": {
+        "id": "gen2_2",
+        "name": "张祖母2",
+        "birthDate": "1947-09-20",
+        "deathDate": "",
+        "birthAddress": "上海市",
+        "livingAddress": "北京市朝阳区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png",
+        "spouse": "gen2_1",
+        "coupleId": "couple_gen2_1"
+      }
+    },
+    {
+      "data": {
+        "id": "gen2_3",
+        "name": "张叔公2",
+        "birthDate": "1950-02-05",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "上海市浦东区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png",
+        "spouse": "gen2_4",
+        "coupleId": "couple_gen2_2"
+      }
+    },
+    {
+      "data": {
+        "id": "gen2_4",
+        "name": "张叔婆2",
+        "birthDate": "1952-07-12",
+        "deathDate": "",
+        "birthAddress": "广州市",
+        "livingAddress": "上海市浦东区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png",
+        "spouse": "gen2_3",
+        "coupleId": "couple_gen2_2"
+      }
+    },
+    {
+      "data": {
+        "id": "gen2_5",
+        "name": "张姑婆2",
+        "birthDate": "1955-11-30",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "深圳市南山区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png"
+      }
+    },
+    {
+      "data": {
+        "id": "gen3_1",
+        "name": "张父3",
+        "birthDate": "1970-04-18",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市海淀区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png",
+        "spouse": "gen3_2",
+        "coupleId": "couple_gen3_1"
+      },
+      "selected": true
+    },
+    {
+      "data": {
+        "id": "gen3_2",
+        "name": "张母3",
+        "birthDate": "1972-08-25",
+        "deathDate": "",
+        "birthAddress": "天津市",
+        "livingAddress": "北京市海淀区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png",
+        "spouse": "gen3_1",
+        "coupleId": "couple_gen3_1"
+      }
+    },
+    {
+      "data": {
+        "id": "gen3_3",
+        "name": "张叔叔3",
+        "birthDate": "1973-12-10",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市西城区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png",
+        "spouse": "gen3_4",
+        "coupleId": "couple_gen3_2"
+      }
+    },
+    {
+      "data": {
+        "id": "gen3_4",
+        "name": "张婶婶3",
+        "birthDate": "1975-05-03",
+        "deathDate": "",
+        "birthAddress": "杭州市",
+        "livingAddress": "北京市西城区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png",
+        "spouse": "gen3_3",
+        "coupleId": "couple_gen3_2"
+      }
+    },
+    {
+      "data": {
+        "id": "gen3_5",
+        "name": "张姑姑3",
+        "birthDate": "1977-09-15",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市丰台区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png"
+      }
+    },
+    {
+      "data": {
+        "id": "gen3_6",
+        "name": "张表叔3",
+        "birthDate": "1976-03-22",
+        "deathDate": "",
+        "birthAddress": "上海市",
+        "livingAddress": "上海市黄浦区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png"
+      }
+    },
+    {
+      "data": {
+        "id": "gen4_1",
+        "name": "张大哥4",
+        "birthDate": "1995-06-10",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市朝阳区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png",
+        "spouse": "gen4_2",
+        "coupleId": "couple_gen4_1"
+      }
+    },
+    {
+      "data": {
+        "id": "gen4_2",
+        "name": "张大嫂4",
+        "birthDate": "1996-10-05",
+        "deathDate": "",
+        "birthAddress": "成都市",
+        "livingAddress": "北京市朝阳区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png",
+        "spouse": "gen4_1",
+        "coupleId": "couple_gen4_1"
+      }
+    },
+    {
+      "data": {
+        "id": "gen4_3",
+        "name": "张二哥4",
+        "birthDate": "1998-02-20",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市通州区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png",
+        "spouse": "gen4_4",
+        "coupleId": "couple_gen4_2"
+      }
+    },
+    {
+      "data": {
+        "id": "gen4_4",
+        "name": "张二嫂4",
+        "birthDate": "1999-07-15",
+        "deathDate": "",
+        "birthAddress": "武汉市",
+        "livingAddress": "北京市通州区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png",
+        "spouse": "gen4_3",
+        "coupleId": "couple_gen4_2"
+      }
+    },
+    {
+      "data": {
+        "id": "gen4_5",
+        "name": "张小妹4",
+        "birthDate": "2001-11-30",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市海淀区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png"
+      }
+    },
+    {
+      "data": {
+        "id": "gen4_6",
+        "name": "张表弟4",
+        "birthDate": "2000-04-08",
+        "deathDate": "",
+        "birthAddress": "上海市",
+        "livingAddress": "上海市徐汇区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png"
+      }
+    },
+    {
+      "data": {
+        "id": "gen5_1",
+        "name": "张小明5",
+        "birthDate": "2020-03-15",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市朝阳区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png"
+      }
+    },
+    {
+      "data": {
+        "id": "gen5_2",
+        "name": "张小华5",
+        "birthDate": "2022-08-20",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市朝阳区",
+        "gender": "女",
+        "isLiving": true,
+        "portraitUrl": "./assets/female.png"
+      }
+    },
+    {
+      "data": {
+        "id": "gen5_3",
+        "name": "张小强5",
+        "birthDate": "2023-12-05",
+        "deathDate": "",
+        "birthAddress": "北京市",
+        "livingAddress": "北京市通州区",
+        "gender": "男",
+        "isLiving": true,
+        "portraitUrl": "./assets/male.png"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "data": {
+        "source": "gen1_1",
+        "target": "gen2_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen1_2",
+        "target": "gen2_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen1_1",
+        "target": "gen2_3"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen1_2",
+        "target": "gen2_3"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen1_1",
+        "target": "gen2_5"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen1_2",
+        "target": "gen2_5"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_1",
+        "target": "gen3_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_2",
+        "target": "gen3_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_1",
+        "target": "gen3_3"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_2",
+        "target": "gen3_3"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_1",
+        "target": "gen3_5"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_2",
+        "target": "gen3_5"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_3",
+        "target": "gen3_6"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen2_4",
+        "target": "gen3_6"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_1",
+        "target": "gen4_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_2",
+        "target": "gen4_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_1",
+        "target": "gen4_3"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_2",
+        "target": "gen4_3"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_1",
+        "target": "gen4_5"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_2",
+        "target": "gen4_5"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_3",
+        "target": "gen4_6"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen3_4",
+        "target": "gen4_6"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen4_1",
+        "target": "gen5_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen4_2",
+        "target": "gen5_1"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen4_1",
+        "target": "gen5_2"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen4_2",
+        "target": "gen5_2"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen4_3",
+        "target": "gen5_3"
+      },
+      "classes": "taxi"
+    },
+    {
+      "data": {
+        "source": "gen4_4",
+        "target": "gen5_3"
+      },
+      "classes": "taxi"
+    }
+  ]
+}
