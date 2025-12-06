@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { TreeListComponent } from './pages/tree-list/tree-list.component';
-import { GenealogyPageComponent } from './pages/genealogy/genealogy.page';
+import { FamilyListPageComponent } from './pages/family-list-page/family-list-page.component';
+import { FamilyPageComponent } from './pages/family/family.page';
 import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'trees' },
-  { path: 'trees', component: TreeListComponent, title: '族谱列表' },
-  { path: 'trees/:id', component: GenealogyPageComponent, title: '族谱详情' },
+  { path: '', pathMatch: 'full', redirectTo: 'family' },
+  { path: 'family', component: FamilyListPageComponent, title: '族谱列表' },
+  { path: 'family/:id', component: FamilyPageComponent, title: '族谱详情' },
   { path: 'me', component: ProfileComponent, title: '我的' },
-  { path: '**', redirectTo: 'trees' },
+  { path: '**', redirectTo: 'family' },
 ];

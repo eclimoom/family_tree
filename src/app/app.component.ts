@@ -21,7 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.navSub = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const url = event.urlAfterRedirects || event.url;
-        const isDetail = /^\/?trees\/[^/]+/.test(url) && !/^\/?trees\/?$/.test(url);
+        const isDetail = /^\/?family\/[^/]+/.test(url) && !/^\/?family\/?$/.test(url);
         this.showNavbar = !isDetail;
       }
     });

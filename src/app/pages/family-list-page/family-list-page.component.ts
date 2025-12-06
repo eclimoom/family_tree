@@ -5,13 +5,13 @@ import { Router, RouterModule } from '@angular/router';
 import { GenealogyStoreService, Genealogy } from '../../services/genealogy-store.service';
 
 @Component({
-  selector: 'app-tree-list',
+  selector: 'app-family-list-page',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './tree-list.component.html',
-  styleUrl: './tree-list.component.scss',
+  templateUrl: './family-list-page.component.html',
+  styleUrl: './family-list-page.component.scss',
 })
-export class TreeListComponent {
+export class FamilyListPageComponent {
   trees: Genealogy[] = [];
   creating = false;
   newTreeName = '';
@@ -39,10 +39,11 @@ export class TreeListComponent {
     const created = this.store.createTree(this.newTreeName);
     this.newTreeName = '';
     this.creating = false;
-    this.router.navigate(['/trees', created.id]);
+    this.router.navigate(['/family', created.id]);
   }
 
   goDetail(id: string) {
-    this.router.navigate(['/trees', id]);
+    this.router.navigate(['/family', id]);
   }
 }
+

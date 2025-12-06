@@ -25,13 +25,13 @@ const LAYOUT_CONFIG = {
 };
 
 @Component({
-  selector: 'app-genealogy-page',
+  selector: 'app-family-page',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './genealogy.page.html',
-  styleUrl: './genealogy.page.scss',
+  templateUrl: './family.page.html',
+  styleUrl: './family.page.scss',
 })
-export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy {
+export class FamilyPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cyContainer', { static: false }) cyContainer!: ElementRef<HTMLDivElement>;
   @ViewChild('cy', { static: false }) cyElement!: ElementRef<HTMLDivElement>;
 
@@ -83,7 +83,7 @@ export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy 
       const treeId = params.get('id') || 'default';
       this.currentTree = this.store.getTree(treeId) || this.store.getTree('default');
       if (!this.currentTree) {
-        this.router.navigate(['/trees']);
+        this.router.navigate(['/family']);
         return;
       }
       if (this.cy) {
@@ -108,11 +108,11 @@ export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy 
     const target = event.target as HTMLSelectElement;
     const nextId = target.value;
     if (!nextId) return;
-    this.router.navigate(['/trees', nextId]);
+    this.router.navigate(['/family', nextId]);
   }
 
   goBackToList() {
-    this.router.navigate(['/trees']);
+    this.router.navigate(['/family']);
   }
 
   ngOnDestroy() {
