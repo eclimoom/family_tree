@@ -28,4 +28,4 @@ sequenceDiagram
 
 | adr_id | title | date | status | affected_modules | details |
 |--------|-------|------|--------|------------------|---------|
-| ADR-001 | 路由分层与特性模块化 | 2025-12-06 | 📝规划中 | Genealogy, TreeList, Profile | history/2025-12/202512061046_genealogy_nav/how.md#adr-001 |
+| ADR-001 | 路由分层与特性模块化 | 2025-12-06 | ✅已采纳 | Genealogy, TreeList, Profile | history/2025-12/202512061046_genealogy_nav/how.md#adr-001 |

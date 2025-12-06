@@ -19,8 +19,8 @@
 | 模块名称 | 职责 | 状态 | 文档 |
 |---------|------|------|------|
 | Genealogy | 族谱可视化展示 | 🚧开发中 | modules/genealogy.md |
-| TreeList | 族谱列表管理与跳转 | 📝规划中 | modules/treelist.md |
-| Profile | 个人中心入口 | 📝规划中 | modules/profile.md |
+| TreeList | 族谱列表管理与跳转 | 🚧开发中 | modules/treelist.md |
+| Profile | 个人中心入口 | 🚧开发中 | modules/profile.md |
 
 ## 3. 快速链接
 - [技术约定](../project.md)
