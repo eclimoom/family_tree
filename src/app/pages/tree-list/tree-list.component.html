@@ -25,7 +25,7 @@
             <h5 class="card-title mb-0">{{ tree.name }}</h5>
             <span class="badge text-bg-secondary">ID: {{ tree.id }}</span>
           </div>
-          <p class="text-muted mb-3">成员数：{{ tree.nodes?.length || 0 }}</p>
+          <p class="text-muted mb-3">成员数：{{ tree.nodes.length || 0 }}</p>
           <button class="btn btn-outline-primary mt-auto" (click)="goDetail(tree.id)">查看详情</button>
         </div>
       </div>
