@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-lg">
+<nav *ngIf="showNavbar" class="navbar fixed-top navbar-expand-lg">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/trees">族谱</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -9,9 +9,6 @@
       <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a class="nav-link" routerLink="/trees">族谱列表</a>
-        </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/trees/default">族谱详情</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/me">我的</a>

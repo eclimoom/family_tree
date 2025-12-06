@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import cytoscape, { Core, EventObject, NodeSingular } from 'cytoscape';
 import dagre from 'cytoscape-dagre';
@@ -26,12 +27,13 @@ const LAYOUT_CONFIG = {
 @Component({
   selector: 'app-genealogy-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './genealogy.page.html',
   styleUrl: './genealogy.page.scss',
 })
 export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('cyContainer', { static: false }) cyContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild('cy', { static: false }) cyElement!: ElementRef<HTMLDivElement>;
 
   cy: Core | null = null;
   stepName = '';
@@ -39,14 +41,44 @@ export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy 
   dragStartParentPos: { x: number; y: number } | null = null;
   dragStartChildPos: { x: number; y: number } | null = null;
   currentTree: Genealogy | undefined;
+  trees: Genealogy[] = [];
+  isAddRelationMode = false; // 控制是否显示添加关系模式
+  userId = '您好, 9527'; // 用户ID显示文本
+
+  // 用户信息数据模型
+  userInfo = {
+    name: '',
+    gender: '',
+    birthDate: '',
+    isLiving: true,
+    deathDate: '',
+    birthAddress: '',
+    livingAddress: '',
+    families: [] as any[],
+  };
+
+  // 获取头像 URL
+  get avatarUrl(): string {
+    return this.userInfo.gender === '女' ? 'assets/female.png' : 'assets/male.png';
+  }
+
+  // 获取生命状态文本
+  get lifeStatusText(): string {
+    return this.userInfo.isLiving ? '在世' : '过世';
+  }
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly store: GenealogyStoreService,
+    private readonly cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit() {
+    this.trees = this.store.list();
+    this.store.trees$.subscribe((trees) => {
+      this.trees = trees;
+    });
     this.route.paramMap.subscribe((params) => {
       const treeId = params.get('id') || 'default';
       this.currentTree = this.store.getTree(treeId) || this.store.getTree('default');
@@ -62,26 +94,42 @@ export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy 
         setTimeout(() => this.initCytoscape(), 0);
       }
     });
-    const userIdElement = document.getElementById('user-id');
-    if (userIdElement) {
-      userIdElement.textContent = '您好, 9527';
-    }
   }
 
   ngAfterViewInit() {
     this.initCytoscape();
-    this.setupEventListeners();
+  }
+
+  get currentTreeName(): string {
+    return this.currentTree?.name || '未选择族谱';
+  }
+
+  onTreeSelectChange(event: Event) {
+    const target = event.target as HTMLSelectElement;
+    const nextId = target.value;
+    if (!nextId) return;
+    this.router.navigate(['/trees', nextId]);
+  }
+
+  goBackToList() {
+    this.router.navigate(['/trees']);
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', this.updateOnResize);
     if (this.cy) {
       this.cy.destroy();
     }
   }
 
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    if (this.cy) {
+      this.updateGenerationLabelsPosition(this.cy);
+    }
+  }
+
   private initCytoscape() {
-    const container = document.getElementById('cy');
+    const container = this.cyElement?.nativeElement || document.getElementById('cy');
     if (!container || !this.currentTree) {
       return;
     }
@@ -299,60 +347,23 @@ export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy 
     this.cy.on('pan zoom', () => {
       this.updateGenerationLabelsPosition(this.cy!);
     });
-
-    window.removeEventListener('resize', this.updateOnResize);
-    window.addEventListener('resize', this.updateOnResize);
   }
 
-  private updateOnResize = () => {
+  onAddRelationClick() {
+    this.addRelation();
+  }
+
+  onBackBtnClick() {
     if (this.cy) {
-      this.updateGenerationLabelsPosition(this.cy);
-    }
-  };
-
-  private setupEventListeners() {
-    const addRelationBtn = document.querySelector('.add-relation-btn');
-    if (addRelationBtn) {
-      addRelationBtn.addEventListener('click', () => {
-        this.addRelation();
-      });
-    }
-
-    const backBtn = document.getElementById('back-btn');
-    if (backBtn) {
-      backBtn.addEventListener('click', () => {
-        if (this.cy) {
-          const node = this.cy.$(':selected');
-          if (node && node.length > 0) {
-            const nodeData = node.data();
-            if (nodeData && nodeData.name) {
-              const userWrap = document.querySelector('.user-wrap');
-              if (userWrap) {
-                userWrap.classList.remove('add-relation');
-              }
-              this.handleSelected(nodeData);
-            }
-          }
+      const node = this.cy.$(':selected');
+      if (node && node.length > 0) {
+        const nodeData = node.data();
+        if (nodeData && nodeData.name) {
+          this.isAddRelationMode = false;
+          this.handleSelected(nodeData);
         }
-      });
+      }
     }
-
-    const genderInputs = document.querySelectorAll('input[name="gender"]');
-    genderInputs.forEach((input) => {
-      input.addEventListener('change', (e) => {
-        const target = e.target as HTMLElement;
-        genderInputs.forEach((inp) => {
-          const label = inp.closest('label.btn');
-          if (label) {
-            label.classList.remove('active');
-          }
-        });
-        const label = target.closest('label.btn');
-        if (label) {
-          label.classList.add('active');
-        }
-      });
-    });
   }
 
   handleSelected(data: any) {
@@ -375,57 +386,27 @@ export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy 
       families = [],
     } = data;
 
-    const fnameInput = document.getElementById('fname') as HTMLInputElement;
-    const nameElement = document.querySelector('.name');
-    const lifespaElement = document.querySelector('.lifespa');
-    const birthdateInput = document.getElementById('birthdate') as HTMLInputElement;
-    const birthAddressInput = document.getElementById('birthAddress') as HTMLInputElement;
-    const livingAddressInput = document.getElementById('livingAddress') as HTMLInputElement;
-    const avatarImg = document.querySelector('.avatar') as HTMLImageElement;
-
-    if (fnameInput) fnameInput.value = name || '';
-    if (nameElement) nameElement.textContent = name || '';
-    if (lifespaElement) lifespaElement.textContent = isLiving ? '在世' : '过世';
-
-    const _g = ['男', '女'].includes(gender) ? gender : '未知';
-
-    const genderInputs = document.querySelectorAll('input[name="gender"]') as NodeListOf<HTMLInputElement>;
-    genderInputs.forEach((input) => {
-      const label = input.closest('label.btn');
-      if (label) {
-        label.classList.remove('active');
-      }
-      input.checked = false;
-    });
-
-    const selectedGender = Array.from(genderInputs).find((input) => input.value === _g);
-    if (selectedGender) {
-      selectedGender.checked = true;
-      const label = selectedGender.closest('label.btn');
-      if (label) {
-        label.classList.add('active');
-      }
-    }
-
-    if (birthdateInput) birthdateInput.value = birthDate;
-    if (birthAddressInput) birthAddressInput.value = birthAddress;
-    if (livingAddressInput) livingAddressInput.value = livingAddress;
-
-    const _portraitUrl = _g === '女' ? 'assets/female.png' : 'assets/male.png';
-
-    if (avatarImg) {
-      avatarImg.src = _portraitUrl;
-    }
-
-    console.log(name, deathDate, families?.length || 0);
+    // 使用 setTimeout 将更新推迟到下一个变更检测周期，避免 ExpressionChangedAfterItHasBeenCheckedError
+    setTimeout(() => {
+      // 使用 Angular 双向绑定更新数据模型
+      this.userInfo = {
+        name: name || '',
+        gender: ['男', '女'].includes(gender) ? gender : '未知',
+        birthDate: birthDate || '',
+        isLiving,
+        deathDate: deathDate || '',
+        birthAddress: birthAddress || '',
+        livingAddress: livingAddress || '',
+        families: families || [],
+      };
+      this.cdr.markForCheck();
+      console.log(this.userInfo.name, this.userInfo.deathDate, this.userInfo.families?.length || 0);
+    }, 0);
   }
 
   addRelation() {
     this.stepName = 'add';
-    const userWrap = document.querySelector('.user-wrap');
-    if (userWrap) {
-      userWrap.classList.add('add-relation');
-    }
+    this.isAddRelationMode = true;
     this.setUserInfo({});
   }
 
@@ -436,7 +417,7 @@ export class GenealogyPageComponent implements OnInit, AfterViewInit, OnDestroy 
     labelsContainer.innerHTML = '';
 
     const generationMap = new Map<number, any[]>();
-    cy.nodes(':not(:parent)').forEach((node: any) => {
+    cy.nodes().not(':parent').forEach((node: any) => {
       const generation = node.data('generation');
       if (generation !== undefined && generation !== null) {
         if (!generationMap.has(generation)) {
