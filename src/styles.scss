@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import './styles/bootstrap.scss';
 
+/* 颜色变量 */
+$generation-label-bg: rgba(36, 32, 72, 0.5);
+
 /* 全局样式 */
 body {
     position: relative;
@@ -30,12 +33,12 @@ body {
     position: absolute;
     left: 10px;
     transform: translateY(-50%);
-    background-color: rgba(36, 32, 72, 0.4);
+    background-color: $generation-label-bg;
     color: white;
     padding: 4px 12px;
     border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 300;
     white-space: nowrap;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     
@@ -49,7 +52,7 @@ body {
       height: 0;
       border-top: 6px solid transparent;
       border-bottom: 6px solid transparent;
-      border-left: 8px solid rgba(36, 32, 72, 0.4);
+      border-left: 8px solid $generation-label-bg;
     }
   }
 }
