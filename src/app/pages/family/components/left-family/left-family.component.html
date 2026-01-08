@@ -30,18 +30,18 @@
           <label for="btnradio1" class="col-form-label text-end col-sm-3 px-0">关系类型</label>
           <div class="col-sm-9 pe-0">
             <div class="btn-group relation-group">
-              <label class="btn btn-outline-primary" for="relation">
-                <input type="radio" class="btn-check" name="relation" id="btnradio1" autocomplete="off">
+              <label class="btn btn-outline-primary" [ngClass]="{'active': relationType === 'parent'}" for="relation-parent">
+                <input type="radio" class="btn-check" name="relation" id="relation-parent" value="parent" [(ngModel)]="relationType" autocomplete="off">
                 父母
               </label>
-              <label class="btn btn-outline-primary">
-                <input type="radio" class="btn-check" name="relation" autocomplete="off">
+              <label class="btn btn-outline-primary" [ngClass]="{'active': relationType === 'spouse'}" for="relation-spouse">
+                <input type="radio" class="btn-check" name="relation" id="relation-spouse" value="spouse" [(ngModel)]="relationType" autocomplete="off">
                 夫妻</label>
-              <label class="btn btn-outline-primary">
-                <input type="radio" class="btn-check" name="relation" autocomplete="off">
+              <label class="btn btn-outline-primary" [ngClass]="{'active': relationType === 'sibling'}" for="relation-sibling">
+                <input type="radio" class="btn-check" name="relation" id="relation-sibling" value="sibling" [(ngModel)]="relationType" autocomplete="off">
                 同辈</label>
-              <label class="btn btn-outline-primary">
-                <input type="radio" class="btn-check" name="relation" autocomplete="off">
+              <label class="btn btn-outline-primary" [ngClass]="{'active': relationType === 'child'}" for="relation-child">
+                <input type="radio" class="btn-check" name="relation" id="relation-child" value="child" [(ngModel)]="relationType" autocomplete="off">
                 子女</label>
             </div>
           </div>
@@ -90,6 +90,10 @@
         <div class="col-sm-8">
           <input type="text" id="livingAddress" placeholder="北京市朝阳区" class="form-control" [(ngModel)]="userInfo.livingAddress" (ngModelChange)="onUserInfoChange()" />
         </div>
+      </div>
+      <div class="mb-3 row">
+        <!-- 提交 -->
+        <button class="btn btn-primary" (click)="onSubmitClick()">提交</button>
       </div>
     </div>
   </div>

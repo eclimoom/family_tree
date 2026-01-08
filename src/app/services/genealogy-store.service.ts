@@ -76,4 +76,18 @@ export class GenealogyStoreService {
     this.store$.next(next);
     return newTree;
   }
+
+  updateTree(updated: Genealogy) {
+    if (!updated?.id) return;
+    const trees = this.store$.getValue();
+    const idx = trees.findIndex((t) => t.id === updated.id);
+    if (idx === -1) return;
+    const next = [...trees];
+    next[idx] = {
+      ...updated,
+      nodes: [...(updated.nodes || [])],
+      edges: [...(updated.edges || [])],
+    };
+    this.store$.next(next);
+  }
 }

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class LeftFamilyComponent {
   @Input() userInfo: any = {
+    id: '',
     name: '',
     gender: '',
     birthDate: '',
@@ -27,6 +28,9 @@ export class LeftFamilyComponent {
   @Output() userInfoChange = new EventEmitter<any>();
   @Output() backBtnClick = new EventEmitter<void>();
   @Output() addRelationClick = new EventEmitter<void>();
+  @Output() submitClick = new EventEmitter<any>();
+
+  relationType: 'parent' | 'spouse' | 'sibling' | 'child' = 'spouse';
 
   // 获取头像 URL
   get avatarUrl(): string {
@@ -48,6 +52,19 @@ export class LeftFamilyComponent {
 
   onAddRelationClick() {
     this.addRelationClick.emit();
+  }
+
+  onSubmitClick() {
+    const payload = {
+      ...this.userInfo,
+      id: this.userInfo?.id || '',
+      gender: this.userInfo?.gender || '未知',
+      isLiving: this.userInfo?.isLiving !== false,
+    };
+    this.submitClick.emit({
+      relationType: this.relationType,
+      payload,
+    });
   }
 }
 

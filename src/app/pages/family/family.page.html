@@ -15,7 +15,8 @@
     [userId]="userId"
     (userInfoChange)="userInfo = $event"
     (backBtnClick)="onBackBtnClick()"
-    (addRelationClick)="onAddRelationClick()">
+    (addRelationClick)="onAddRelationClick()"
+    (submitClick)="onSubmit($event)">
   </app-left-family>
 
   <app-genealogy-canvas [currentTree]="currentTree" (nodeSelected)="handleSelected($event)"></app-genealogy-canvas>

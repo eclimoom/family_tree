@@ -19,9 +19,12 @@ export class FamilyPageComponent implements OnInit {
   trees: Genealogy[] = [];
   isAddRelationMode = false; // 控制是否显示添加关系模式
   userId = '您好, 9527'; // 用户ID显示文本
+  selectedNode: any = null; // 画布中当前选中的节点
+  relationBase: any = null; // 添加关系时的基准节点
 
   // 用户信息数据模型
   userInfo = {
+    id: '',
     name: '',
     gender: '',
     birthDate: '',
@@ -80,6 +83,7 @@ export class FamilyPageComponent implements OnInit {
 
   handleSelected(data: any) {
     if (!data) return;
+    this.selectedNode = data;
     this.setUserInfo(data);
   }
 
@@ -88,6 +92,7 @@ export class FamilyPageComponent implements OnInit {
       data = {};
     }
     const {
+      id = '',
       name = '',
       gender = '',
       birthDate = '',
@@ -102,6 +107,7 @@ export class FamilyPageComponent implements OnInit {
     setTimeout(() => {
       // 使用 Angular 双向绑定更新数据模型
       this.userInfo = {
+        id: id || '',
         name: name || '',
         gender: ['男', '女'].includes(gender) ? gender : '未知',
         birthDate: birthDate || '',
@@ -119,7 +125,126 @@ export class FamilyPageComponent implements OnInit {
   addRelation() {
     this.stepName = 'add';
     this.isAddRelationMode = true;
+    // 记录基准节点（优先使用画布选中的节点）
+    this.relationBase = this.selectedNode || this.userInfo;
+    // 清空表单用于录入新成员
     this.setUserInfo({});
+  }
+
+  onSubmit(event: { payload: any; relationType?: string }) {
+    if (!event || !event.payload || !this.currentTree) return;
+    const relationType = event.relationType || 'spouse';
+    const payload = event.payload;
+    const normalizedId = (payload.id || '').trim() || `person_${Date.now()}`;
+    let normalizedData = {
+      ...payload,
+      id: normalizedId,
+      gender: ['男', '女', '未知'].includes(payload.gender) ? payload.gender : '未知',
+      isLiving: payload.isLiving !== false,
+    };
+
+    const nextNodes = [...(this.currentTree.nodes || [])];
+    const existIdx = nextNodes.findIndex((n) => n?.data?.id === normalizedId);
+    const nextEdges = [...(this.currentTree.edges || [])];
+
+    // 先处理新增 / 更新自身
+    if (existIdx > -1) {
+      nextNodes[existIdx] = {
+        ...nextNodes[existIdx],
+        data: {
+          ...nextNodes[existIdx].data,
+          ...normalizedData,
+        },
+      };
+    } else {
+      nextNodes.push({ data: normalizedData });
+    }
+
+    // 如果是添加关系且存在基准节点，更新双方的关联字段
+    if (relationType === 'spouse' && this.relationBase?.id) {
+      const baseId = this.relationBase.id;
+      const baseIdx = nextNodes.findIndex((n) => n?.data?.id === baseId);
+      const coupleId =
+        this.relationBase.coupleId ||
+        normalizedData.coupleId ||
+        `couple_${baseId}_${normalizedId}`;
+
+      // 更新基准节点
+      if (baseIdx > -1) {
+        nextNodes[baseIdx] = {
+          ...nextNodes[baseIdx],
+          data: {
+            ...nextNodes[baseIdx].data,
+            spouse: normalizedId,
+            coupleId,
+          },
+        };
+      }
+
+      // 更新新添加节点
+      const newIdx = nextNodes.findIndex((n) => n?.data?.id === normalizedId);
+      if (newIdx > -1) {
+        nextNodes[newIdx] = {
+          ...nextNodes[newIdx],
+          data: {
+            ...nextNodes[newIdx].data,
+            spouse: baseId,
+            coupleId,
+          },
+        };
+      }
+    }
+
+    if (relationType === 'child' && this.relationBase?.id) {
+      const baseId = this.relationBase.id;
+      const spouseId = this.relationBase.spouse;
+      const childGeneration = (this.relationBase.generation ?? 0) + 1;
+
+      // 更新子代的辈分信息
+      const childIdx = nextNodes.findIndex((n) => n?.data?.id === normalizedId);
+      if (childIdx > -1) {
+        nextNodes[childIdx] = {
+          ...nextNodes[childIdx],
+          data: {
+            ...nextNodes[childIdx].data,
+            generation: nextNodes[childIdx].data.generation ?? childGeneration,
+          },
+        };
+        normalizedData = nextNodes[childIdx].data;
+      }
+
+      const addParentEdge = (parentId: string | undefined, childId: string) => {
+        if (!parentId) return;
+        const exists = nextEdges.some(
+          (e) => e?.data?.source === parentId && e?.data?.target === childId
+        );
+        if (exists) return;
+        nextEdges.push({
+          data: {
+            id: `edge_${parentId}_${childId}`,
+            source: parentId,
+            target: childId,
+            relation: 'parent-child',
+          },
+          classes: 'parent-child',
+        });
+      };
+
+      addParentEdge(baseId, normalizedId);
+      addParentEdge(spouseId, normalizedId);
+    }
+
+    const nextTree = {
+      ...this.currentTree,
+      nodes: nextNodes,
+      edges: nextEdges,
+    };
+
+    this.currentTree = nextTree;
+    this.store.updateTree(nextTree);
+    this.setUserInfo(normalizedData);
+    this.isAddRelationMode = false;
+    this.relationBase = null;
   }
 
 }
